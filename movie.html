@@ -1,30 +1,35 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html>
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Assistir</title>
   <style>
-    body { background: #000; margin: 0; color: #fff; font-family: Arial; text-align: center; }
-    video { width: 100%; height: 90vh; background: #000; }
-    h1 { margin: 10px 0; }
+    body { background: #000; margin: 0; display: flex; flex-direction: column; align-items: center; color: #fff; }
+    video { width: 90%; max-width: 900px; margin-top: 20px; }
   </style>
 </head>
 <body>
   <h1 id="title">Carregando...</h1>
-  <video controls id="video"></video>
+  <video id="player" controls autoplay></video>
 
   <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get('id');
-    fetch('data/titles.json').then(r => r.json()).then(json => {
-      const item = json.find(i => i.id === id);
-      if (item) {
-        document.getElementById('title').textContent = item.title;
-        document.getElementById('video').src = item.video;
+    async function loadMovie() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const id = urlParams.get('id');
+
+      const res = await fetch('titles.json');
+      const data = await res.json();
+      const movie = data.find(m => m.id === id);
+
+      if (movie) {
+        document.getElementById('title').textContent = movie.title;
+        document.getElementById('player').src = movie.videoUrl;
       } else {
-        document.body.innerHTML = '<h1>Vídeo não encontrado</h1>';
+        document.body.innerHTML = "<h2>Filme não encontrado</h2>";
       }
-    });
+    }
+
+    loadMovie();
   </script>
 </body>
 </html>
