@@ -1,134 +1,97 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>Stream</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
       margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background-color: #0f0f0f;
+      background-color: #141414;
+      font-family: 'Segoe UI', sans-serif;
       color: #fff;
     }
 
-    .navbar {
-      background-color: #000;
+    header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 1em 2em;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+      padding: 20px;
+      background-color: #000;
     }
 
-    .navbar h1 {
-      margin: 0;
-      font-size: 1.8em;
+    .logo {
+      font-size: 28px;
+      font-weight: bold;
       color: #e50914;
-      letter-spacing: 1px;
     }
 
-    .login-btn {
-      background-color: #e50914;
-      border: none;
-      color: white;
-      padding: 0.6em 1.2em;
-      font-size: 1em;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s;
+    .user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
-    .login-btn:hover {
-      background-color: #f6121d;
+    .user img {
+      border-radius: 50%;
+      width: 35px;
+      height: 35px;
     }
 
-    .movies-container {
-      padding: 2em;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 1.5em;
+    .main {
+      padding: 40px 20px;
     }
 
-    .movie-card {
-      background-color: #1c1c1c;
-      border-radius: 8px;
-      overflow: hidden;
-      cursor: pointer;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    .section-title {
+      font-size: 24px;
+      margin: 20px 0 10px;
     }
 
-    .movie-card:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 20px rgba(255, 0, 0, 0.4);
+    .movies {
+      display: flex;
+      gap: 15px;
+      overflow-x: auto;
     }
 
-    .movie-poster {
-      width: 100%;
-      height: 270px;
+    .movies img {
+      width: 180px;
+      height: 260px;
+      border-radius: 5px;
       object-fit: cover;
     }
 
-    .movie-title {
-      padding: 0.8em 1em;
-      font-size: 1em;
-      font-weight: 600;
-      text-align: center;
-      background-color: #161616;
+    .login-btn, .logout-btn {
+      background: #e50914;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      color: white;
+      cursor: pointer;
     }
 
-    @media (max-width: 600px) {
-      .movie-poster {
-        height: 200px;
-      }
-      .movie-title {
-        font-size: 0.9em;
-      }
+    .login-btn:hover, .logout-btn:hover {
+      background: #b00610;
     }
   </style>
 </head>
 <body>
+  <header>
+    <div class="logo">Stream</div>
+    <div id="user-section">
+      <button class="login-btn" onclick="login()">Entrar com Discord</button>
+    </div>
+  </header>
 
-  <div class="navbar">
-    <h1>Stream</h1>
-    <button class="login-btn" onclick="login()">Login com Discord</button>
+  <div class="main">
+    <div class="section-title">Filmes em Destaque</div>
+    <div class="movies" id="movies-list">
+      <!-- Filmes falsos como exemplo -->
+      <img src="https://image.tmdb.org/t/p/w500/8YFL5QQVPy3AgrEQxNYVSgiPEbe.jpg" alt="Deadpool">
+      <img src="https://image.tmdb.org/t/p/w500/9Gtg2DzBhmYamXBS1hKAhiwbBKS.jpg" alt="Matrix">
+      <img src="https://image.tmdb.org/t/p/w500/r7XifzvtezNt31ypvsmb6Oqxw49.jpg" alt="Velozes">
+    </div>
   </div>
 
-  <div class="movies-container" id="movies"></div>
-
-  <script>
-    function login() {
-      const clientId = '1392176069070557365';
-      const redirectUri = 'https://stream-psi-six.vercel.app/callback.html';
-      const scope = 'identify';
-      window.location.href = `https://discord.com/oauth2/authorize?client_id=1388158298305597483&response_type=code&redirect_uri=https%3A%2F%2Fstream-psi-six.vercel.app%2Fcallback.html&scope=identify+email`;
-    }
-
-    async function loadMovies() {
-      try {
-        const res = await fetch('titles.json');
-        const movies = await res.json();
-        const container = document.getElementById('movies');
-
-        for (const movie of movies) {
-          const div = document.createElement('div');
-          div.className = 'movie-card';
-          div.innerHTML = `
-            <img class="movie-poster" src="${movie.poster || 'https://via.placeholder.com/300x450?text=Poster'}" alt="${movie.title}">
-            <div class="movie-title">${movie.title}</div>
-          `;
-          div.onclick = () => window.location.href = \`movie.html?id=\${movie.id}\`;
-          container.appendChild(div);
-        }
-      } catch (err) {
-        console.error('Erro ao carregar filmes:', err);
-      }
-    }
-
-    loadMovies();
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
