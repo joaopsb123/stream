@@ -1,45 +1,31 @@
-export default async function handler(req, res) {
-  const code = req.query.code;
-  const redirect_uri = "https://stream-psi-six.vercel.app/callback.html";
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Conectando...</title>
+  <script>
+    async function init() {
+      const code = new URLSearchParams(window.location.search).get("code");
+      if (!code) return alert("Sem código");
 
-  if (!code) return res.status(400).json({ error: "Código ausente" });
+      try {
+        const res = await fetch(`/api/callback?code=${code}`);
+        const data = await res.json();
 
-  try {
-    const tokenResponse = await fetch("https://discord.com/api/oauth2/token", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({
-        client_id: "1388158298305597483",
-        client_secret: "hi4eqSy_EMAXNv1oG55HFtgiif0Iqt0n",
-        grant_type: "authorization_code",
-        code,
-        redirect_uri
-      })
-    });
-
-    const tokenData = await tokenResponse.json();
-
-    if (!tokenResponse.ok) {
-      return res.status(400).json({ error: "Erro ao obter token", debug: tokenData });
-    }
-
-    const userRes = await fetch("https://discord.com/api/users/@me", {
-      headers: { Authorization: `Bearer ${tokenData.access_token}` }
-    });
-
-    const user = await userRes.json();
-
-    return res.status(200).json({
-      user: {
-        id: user.id,
-        username: user.username,
-        avatarUrl: user.avatar
-          ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
-          : `https://cdn.discordapp.com/embed/avatars/${user.discriminator % 5}.png`
+        if (data.user) {
+          localStorage.setItem("user", JSON.stringify(data.user));
+          window.location.href = "/";
+        } else {
+          alert("Erro ao autenticar");
+        }
+      } catch {
+        alert("Erro no servidor");
       }
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Erro interno" });
-  }
-}
+    }
+    init();
+  </script>
+</head>
+<body style="background:#000;color:#fff;text-align:center;padding:30px;">
+  <p>Carregando...</p>
+</body>
+</html>
