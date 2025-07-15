@@ -1,0 +1,20 @@
+[
+  {
+    "id": "naruto01",
+    "title": "Naruto Shippuden",
+    "type": "anime",
+    "genre": ["Ação", "Aventura"],
+    "description": "Naruto luta para proteger sua vila e amigos.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/9/94/Naruto_Uzumaki.png",
+    "video": "https://www.w3schools.com/html/mov_bbb.mp4"
+  },
+  {
+    "id": "spiderman01",
+    "title": "Spider-Man: No Way Home",
+    "type": "filme",
+    "genre": ["Ação", "Herói"],
+    "description": "Peter Parker enfrenta vilões de outros universos.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/0/00/Spider-Man_No_Way_Home_poster.jpg",
+    "video": "https://www.w3schools.com/html/movie.mp4"
+  }
+]
