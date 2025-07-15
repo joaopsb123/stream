@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+</head>
+<body>
+  <script>
+    async function init() {
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get('code');
+      if (!code) return;
+
+      try {
+        const res = await fetch(`/api/callback?code=${code}`);
+        const data = await res.json();
+        alert(`Bem-vindo, ${data.user.username}!`);
+        window.location.href = '/';
+      } catch (err) {
+        alert("Erro ao logar.");
+      }
+    }
+    init();
+  </script>
+</body>
+</html>
