@@ -3,95 +3,106 @@
 <head>
   <meta charset="UTF-8">
   <title>Stream</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       margin: 0;
-      background-color: #141414;
+      background: #141414;
+      color: white;
       font-family: 'Segoe UI', sans-serif;
-      color: #fff;
     }
-
     header {
+      background: #000;
+      padding: 15px 25px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 20px;
-      background-color: #000;
     }
-
     .logo {
       font-size: 28px;
       font-weight: bold;
       color: #e50914;
     }
-
-    .user {
+    .user-info {
       display: flex;
       align-items: center;
       gap: 10px;
     }
-
-    .user img {
-      border-radius: 50%;
+    .user-info img {
       width: 35px;
       height: 35px;
+      border-radius: 50%;
     }
-
-    .main {
-      padding: 40px 20px;
+    .btn {
+      background: #e50914;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      color: white;
+      cursor: pointer;
     }
-
-    .section-title {
-      font-size: 24px;
-      margin: 20px 0 10px;
+    .btn:hover {
+      background: #b00610;
     }
-
+    .section {
+      padding: 30px 20px;
+    }
+    .section h2 {
+      margin-bottom: 15px;
+    }
     .movies {
       display: flex;
       gap: 15px;
       overflow-x: auto;
     }
-
     .movies img {
       width: 180px;
       height: 260px;
-      border-radius: 5px;
       object-fit: cover;
-    }
-
-    .login-btn, .logout-btn {
-      background: #e50914;
-      border: none;
-      padding: 10px 15px;
       border-radius: 4px;
-      color: white;
-      cursor: pointer;
-    }
-
-    .login-btn:hover, .logout-btn:hover {
-      background: #b00610;
     }
   </style>
 </head>
 <body>
   <header>
     <div class="logo">Stream</div>
-    <div id="user-section">
-      <button class="login-btn" onclick="login()">Entrar com Discord</button>
+    <div id="userArea">
+      <button class="btn" onclick="login()">Login com Discord</button>
     </div>
   </header>
 
-  <div class="main">
-    <div class="section-title">Filmes em Destaque</div>
-    <div class="movies" id="movies-list">
-      <!-- Filmes falsos como exemplo -->
+  <div class="section">
+    <h2>Filmes em Destaque</h2>
+    <div class="movies">
       <img src="https://image.tmdb.org/t/p/w500/8YFL5QQVPy3AgrEQxNYVSgiPEbe.jpg" alt="Deadpool">
       <img src="https://image.tmdb.org/t/p/w500/9Gtg2DzBhmYamXBS1hKAhiwbBKS.jpg" alt="Matrix">
-      <img src="https://image.tmdb.org/t/p/w500/r7XifzvtezNt31ypvsmb6Oqxw49.jpg" alt="Velozes">
+      <img src="https://image.tmdb.org/t/p/w500/r7XifzvtezNt31ypvsmb6Oqxw49.jpg" alt="Rápidos e Furiosos">
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user) {
+      document.getElementById("userArea").innerHTML = `
+        <div class="user-info">
+          <img src="${user.avatarUrl}" alt="Avatar">
+          <span>${user.username}</span>
+          <button class="btn" onclick="logout()">Sair</button>
+        </div>
+      `;
+    }
+
+    function login() {
+      const client_id = "1388158298305597483";
+      const redirect_uri = encodeURIComponent("https://stream-psi-six.vercel.app/callback.html");
+      const scope = "identify email";
+      window.location.href = `https://discord.com/oauth2/authorize?client_id=1388158298305597483&response_type=code&redirect_uri=https%3A%2F%2Fstream-psi-six.vercel.app%2Fcallback.html&scope=identify+email`;
+    }
+
+    function logout() {
+      localStorage.removeItem("user");
+      location.reload();
+    }
+  </script>
 </body>
 </html>
