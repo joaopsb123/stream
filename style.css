@@ -1,0 +1,15 @@
+body { margin:0; font-family:sans-serif; background:#0b0c10; color:#e6e6e6; }
+header { display:flex; justify-content:space-between; align-items:center; padding:12px 20px; background:#111; }
+header h1 { margin:0; font-size:24px; }
+header a { color:#5865F2; text-decoration:none; font-weight:bold; }
+main { display:grid; grid-template-columns:280px 1fr; gap:16px; padding:16px; }
+aside { border-right:1px solid #222; padding-right:12px; }
+#search { width:100%; padding:8px; border-radius:8px; border:1px solid #333; background:#111; color:#e6e6e6; }
+#animeList { list-style:none; padding:0; margin-top:12px; display:flex; flex-direction:column; gap:6px; }
+#animeList li { padding:8px 12px; border-radius:8px; background:#111; cursor:pointer; }
+#animeList li:hover { outline:2px solid #222; }
+#episodeList { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+button { border:none; padding:8px 12px; border-radius:12px; background:#5865F2; color:white; cursor:pointer; font-weight:600; }
+button:hover { opacity:0.9; }
+video { border-radius:12px; background:#000; }
+@media (max-width:800px){ main{ grid-template-columns:1fr; } aside{ border:none; padding:0; } }
