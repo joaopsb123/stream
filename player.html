@@ -1,31 +1,48 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt">
 <head>
   <meta charset="UTF-8">
-  <title>Conectando...</title>
-  <script>
-    async function init() {
-      const code = new URLSearchParams(window.location.search).get("code");
-      if (!code) return alert("Sem código");
-
-      try {
-        const res = await fetch(`/api/callback?code=${code}`);
-        const data = await res.json();
-
-        if (data.user) {
-          localStorage.setItem("user", JSON.stringify(data.user));
-          window.location.href = "/";
-        } else {
-          alert("Erro ao autenticar");
-        }
-      } catch {
-        alert("Erro no servidor");
-      }
-    }
-    init();
-  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Player de Anime</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body style="background:#000;color:#fff;text-align:center;padding:30px;">
-  <p>Carregando...</p>
+<body>
+  <header>
+    <h1 id="animeTitle">Anime</h1>
+    <a href="index.html">← Voltar</a>
+  </header>
+
+  <main>
+    <video id="player" controls width="100%" autoplay></video>
+    <div id="episodeList"></div>
+  </main>
+
+  <script>
+    const player = document.getElementById('player');
+    const episodeList = document.getElementById('episodeList');
+    const animeTitle = document.getElementById('animeTitle');
+
+    const anime = JSON.parse(localStorage.getItem('selectedAnime'));
+    if (!anime) {
+      alert('Nenhum anime selecionado!');
+      window.location.href = 'index.html';
+    }
+
+    animeTitle.textContent = anime.title;
+
+    anime.episodes.forEach(ep => {
+      const btn = document.createElement('button');
+      btn.textContent = ep.name;
+      btn.onclick = () => {
+        player.src = ep.file;
+        player.play();
+      };
+      episodeList.appendChild(btn);
+    });
+
+    if(anime.episodes[0]){
+      player.src = anime.episodes[0].file;
+    }
+  </script>
 </body>
 </html>
