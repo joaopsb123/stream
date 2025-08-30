@@ -4,74 +4,387 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Site de Animes Moderno</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:#0b0c10; color:#e6e6e6; min-height:100vh; }
-  header { display:flex; justify-content:space-between; align-items:center; padding:16px 32px; background:#111; }
-  header h1 { font-size:26px; font-weight:700; color:#fff; }
-  main { display:flex; flex-direction:column; align-items:center; padding:20px; }
-  #search { width:90%; max-width:600px; padding:12px 16px; margin-bottom:24px; border-radius:12px; border:none; outline:none; background:#1c1f27; color:#e6e6e6; font-size:16px; }
-  #animeList { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:20px; width:100%; max-width:1200px; }
-  .anime-card { background:#111; border-radius:16px; overflow:hidden; cursor:pointer; transition:0.3s; box-shadow:0 4px 15px rgba(0,0,0,0.5); display:flex; flex-direction:column; align-items:center; text-align:center; padding:16px; }
-  .anime-card:hover { transform:translateY(-6px); box-shadow:0 8px 25px rgba(0,0,0,0.6); }
-  .anime-card img { width:100%; border-radius:12px; object-fit:cover; height:250px; margin-bottom:12px; }
-  .anime-card h3 { font-size:18px; color:#fff; }
-  footer { text-align:center; padding:12px; background:#111; font-size:14px; color:#888; margin-top:40px; }
-  @media(max-width:800px){ #animeList{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));} }
+  :root {
+    --primary: #5865F2;
+    --primary-hover: #7289da;
+    --background: #0b0c10;
+    --card-bg: #111;
+    --text: #e6e6e6;
+    --accent: #ff3864;
+  }
+  body { 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    background: var(--background); 
+    color: var(--text); 
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 16px 32px; 
+    background: var(--card-bg);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+  header h1 { 
+    font-size: 26px; 
+    font-weight: 700; 
+    color: #fff; 
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  header a { 
+    color: var(--primary); 
+    text-decoration: none; 
+    font-weight: bold; 
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  header a:hover { 
+    color: var(--primary-hover); 
+  }
+  main { 
+    flex: 1;
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    padding: 20px; 
+  }
+  .search-container {
+    width: 90%;
+    max-width: 600px;
+    position: relative;
+    margin-bottom: 24px;
+  }
+  #search { 
+    width: 100%;
+    padding: 12px 16px 12px 40px; 
+    border-radius: 12px; 
+    border: none; 
+    outline: none; 
+    background: #1c1f27; 
+    color: var(--text); 
+    font-size: 16px; 
+  }
+  .search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+  }
+  #animeList { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
+    gap: 20px; 
+    width: 100%; 
+    max-width: 1200px; 
+  }
+  .anime-card { 
+    background: var(--card-bg); 
+    border-radius: 16px; 
+    overflow: hidden; 
+    cursor: pointer; 
+    transition: 0.3s; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5); 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    text-align: center; 
+    padding: 16px; 
+    position: relative;
+  }
+  .anime-card:hover { 
+    transform: translateY(-6px); 
+    box-shadow: 0 8px 25px rgba(0,0,0,0.6); 
+  }
+  .anime-card img { 
+    width: 100%; 
+    border-radius: 12px; 
+    object-fit: cover; 
+    height: 250px; 
+    margin-bottom: 12px; 
+  }
+  .anime-card h3 { 
+    font-size: 18px; 
+    color: #fff; 
+    margin-bottom: 8px;
+  }
+  .anime-card .episode-count {
+    background: var(--primary);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-size: 12px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+  footer { 
+    text-align: center; 
+    padding: 16px; 
+    background: var(--card-bg); 
+    font-size: 14px; 
+    color: #888; 
+    margin-top: 40px; 
+  }
+  #playerSection { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    margin-top: 24px; 
+    width: 90%; 
+    max-width: 900px; 
+    padding: 20px;
+    background: rgba(28, 31, 39, 0.8);
+    border-radius: 16px;
+  }
+  #playerSection h2 {
+    margin-bottom: 16px;
+    text-align: center;
+    color: #fff;
+  }
+  video { 
+    width: 100%; 
+    border-radius: 12px; 
+    background: #000; 
+    box-shadow: 0 0 20px rgba(0,0,0,0.7); 
+  }
+  #episodeList { 
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 12px; 
+    margin-top: 20px; 
+    justify-content: center; 
+  }
+  .episode-btn {
+    border: none; 
+    padding: 10px 16px; 
+    border-radius: 12px; 
+    background: var(--primary); 
+    color: white; 
+    cursor: pointer; 
+    font-weight: 600; 
+    transition: 0.2s;
+    min-width: 120px;
+  }
+  .episode-btn:hover { 
+    opacity: 0.9; 
+    transform: scale(1.05);
+  }
+  .episode-btn.active {
+    background: var(--accent);
+    box-shadow: 0 0 10px rgba(255, 56, 100, 0.5);
+  }
+  .back-btn {
+    margin-top: 20px;
+    background: #444;
+  }
+  .loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    width: 100%;
+  }
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    border-top: 4px solid var(--primary);
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  @media(max-width: 800px){
+    #animeList { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+    header { padding: 16px; }
+    header h1 { font-size: 20px; }
+  }
+  @media(max-width: 480px){
+    #animeList { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; }
+    .anime-card { padding: 12px; }
+    .anime-card img { height: 180px; }
+  }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>🎌 Meus Animes</h1>
+  <h1><i class="fas fa-dragon"></i> Meus Animes</h1>
+  <a href="index.html"><i class="fas fa-home"></i> Início</a>
 </header>
 
 <main>
-  <input id="search" placeholder="Pesquisar anime...">
-  <div id="animeList"></div>
+  <div class="search-container">
+    <i class="fas fa-search search-icon"></i>
+    <input id="search" placeholder="Pesquisar anime...">
+  </div>
+  
+  <div id="animeList">
+    <div class="loading">
+      <div class="spinner"></div>
+    </div>
+  </div>
+
+  <section id="playerSection" style="display:none;">
+    <h2 id="animeTitle"></h2>
+    <video id="player" controls></video>
+    <div id="episodeList"></div>
+    <button class="back-btn" onclick="hidePlayer()">
+      <i class="fas fa-arrow-left"></i> Voltar para a lista
+    </button>
+  </section>
 </main>
 
 <footer>
-  <small>Use apenas arquivos que você tem permissão de hospedar.</small>
+  <small><i class="fas fa-exclamation-circle"></i> Use apenas arquivos que você tem permissão de hospedar.</small>
 </footer>
 
 <script>
-const catalog = [
-  {
-    title: "Solo Leveling",
-    episodes: [
-      {
-        name: "Episódio 1 - Dublado",
-        file: "https://drive.google.com/file/d/1iZe7IyoaBsSu0MaM-C_l3ARCacVwtQl5/view?usp=drivesdk"
-      }
-    ]
-  }
-];
+let catalog = [];
+let selectedAnime = null;
+let currentEpisodeIndex = 0;
 
-function renderList(filter='') {
-  const listEl = document.getElementById('animeList');
-  listEl.innerHTML='';
-  catalog.filter(a=>a.title.toLowerCase().includes(filter.toLowerCase()))
-    .forEach(anime=>{
-      const card = document.createElement('div');
-      card.className='anime-card';
-      card.innerHTML=`<img src="https://via.placeholder.com/400x250.png?text=${encodeURIComponent(anime.title)}"><h3>${anime.title}</h3>`;
-      
-      // Clique abre primeiro episódio no Google Drive
-      card.onclick=()=>{
-        window.open(anime.episodes[0].file, '_blank');
-      };
-      
-      listEl.appendChild(card);
+// Simulação de carregamento do catálogo
+setTimeout(() => {
+  fetch('catalog.json')
+    .then(response => response.json())
+    .then(data => {
+      catalog = data;
+      renderList();
+    })
+    .catch(error => {
+      console.error('Erro ao carregar o catálogo:', error);
+      document.getElementById('animeList').innerHTML = `
+        <div style="text-align:center; width:100%; padding:40px; color:#888;">
+          <i class="fas fa-exclamation-triangle" style="font-size:48px; margin-bottom:16px;"></i>
+          <p>Erro ao carregar a lista de animes. Verifique se o arquivo catalog.json existe.</p>
+        </div>
+      `;
     });
+}, 1000);
+
+function renderList(filter = '') {
+  const listEl = document.getElementById('animeList');
+  
+  const filteredAnimes = catalog.filter(a => 
+    a.title.toLowerCase().includes(filter.toLowerCase())
+  );
+  
+  if (filteredAnimes.length === 0) {
+    listEl.innerHTML = `
+      <div style="text-align:center; width:100%; padding:40px; color:#888;">
+        <i class="fas fa-search" style="font-size:48px; margin-bottom:16px;"></i>
+        <p>Nenhum anime encontrado. Tente usar outros termos de busca.</p>
+      </div>
+    `;
+    return;
+  }
+  
+  listEl.innerHTML = '';
+  filteredAnimes.forEach((anime, idx) => {
+    const card = document.createElement('div');
+    card.className = 'anime-card';
+    card.innerHTML = `
+      <div class="episode-count">${anime.episodes.length} ep</div>
+      <img src="https://via.placeholder.com/400x250.png?text=${encodeURIComponent(anime.title)}" alt="${anime.title}">
+      <h3>${anime.title}</h3>
+    `;
+    card.onclick = () => selectAnime(idx);
+    listEl.appendChild(card);
+  });
 }
 
-renderList();
+function selectAnime(idx) {
+  selectedAnime = catalog[idx];
+  document.getElementById('animeTitle').textContent = selectedAnime.title;
+  const section = document.getElementById('playerSection');
+  section.style.display = 'flex';
 
-document.getElementById('search').addEventListener('input', e=>{
-  renderList(e.target.value);
+  const episodeList = document.getElementById('episodeList');
+  episodeList.innerHTML = '';
+  selectedAnime.episodes.forEach((ep, epIdx) => {
+    const btn = document.createElement('button');
+    btn.className = 'episode-btn';
+    btn.textContent = ep.name;
+    btn.onclick = () => playEpisode(epIdx);
+    episodeList.appendChild(btn);
+  });
+
+  // Reproduzir o primeiro episódio por padrão
+  if (selectedAnime.episodes[0]) {
+    playEpisode(0);
+  }
+
+  section.scrollIntoView({ behavior: 'smooth' });
+}
+
+function playEpisode(epIdx) {
+  currentEpisodeIndex = epIdx;
+  const episode = selectedAnime.episodes[epIdx];
+  
+  // Atualizar o player
+  const player = document.getElementById('player');
+  player.src = episode.file;
+  player.play();
+  
+  // Destacar o episódio atual
+  const episodeButtons = document.querySelectorAll('.episode-btn');
+  episodeButtons.forEach((btn, idx) => {
+    if (idx === epIdx) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+}
+
+function hidePlayer() {
+  document.getElementById('playerSection').style.display = 'none';
+  const player = document.getElementById('player');
+  player.pause();
+  player.src = '';
+  
+  // Scroll para o topo
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Event listeners
+document.getElementById('search').addEventListener('input', e => renderList(e.target.value));
+
+// Teclas de atalho para navegação
+document.addEventListener('keydown', (e) => {
+  const playerSection = document.getElementById('playerSection');
+  if (playerSection.style.display !== 'none' && selectedAnime) {
+    if (e.key === 'ArrowRight') {
+      // Próximo episódio
+      const nextEpisode = (currentEpisodeIndex + 1) % selectedAnime.episodes.length;
+      playEpisode(nextEpisode);
+    } else if (e.key === 'ArrowLeft') {
+      // Episódio anterior
+      const prevEpisode = (currentEpisodeIndex - 1 + selectedAnime.episodes.length) % selectedAnime.episodes.length;
+      playEpisode(prevEpisode);
+    } else if (e.key === 'Escape') {
+      hidePlayer();
+    }
+  }
 });
 </script>
 
 </body>
-</html>
+   </html>
